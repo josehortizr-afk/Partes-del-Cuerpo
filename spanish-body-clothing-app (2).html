@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spanish Practice - Body & Clothing</title>
+  <style>
+    :root{
+      --bg:#fafafa;
+      --card:#ffffff;
+      --border:#e0e0e0;
+      --text:#212121;
+      --muted:#757575;
+      --primary:#5b86e5;
+      --primary-dark:#4a6fd4;
+      --success:#4caf50;
+      --error:#f44336;
+      --accent:#36d1dc;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      padding:0 20px 80px 20px;
+    }
+    .container{max-width:900px;margin:0 auto}
+
+    header{
+      background:white;
+      padding:24px 24px 16px;
+      border-radius:0;
+      margin-bottom:24px;
+      border-bottom:3px solid var(--primary);
+    }
+    h1{
+      font-size:28px;
+      font-weight:600;
+      margin-bottom:4px;
+      color:var(--text);
+    }
+    .subtitle{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:0;
+    }
+
+    .stats-ribbon{
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:linear-gradient(to right, #ffffff 0%, #f8f9ff 50%, #ffffff 100%);
+      border-top:2px solid var(--primary);
+      padding:12px 20px;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      gap:32px;
+      z-index:1000;
+      box-shadow:0 -2px 10px rgba(91,134,229,0.1);
+    }
+    .stat-item{
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .stat-number{
+      font-size:18px;
+      font-weight:700;
+      color:var(--primary);
+    }
+    .stat-label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    .tabs{
+      display:flex;
+      gap:8px;
+      margin-bottom:20px;
+      border-bottom:1px solid var(--border);
+      padding-bottom:0;
+      flex-wrap:wrap;
+    }
+    .tab{
+      padding:10px 16px;
+      cursor:pointer;
+      font-weight:500;
+      font-size:14px;
+      color:var(--muted);
+      border-bottom:2px solid transparent;
+      transition:all .2s;
+    }
+    .tab:hover{color:var(--text)}
+    .tab.active{
+      color:var(--primary);
+      border-bottom-color:var(--primary);
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      padding:24px;
+      border-radius:8px;
+      margin-bottom:20px;
+    }
+
+    .btn{
+      border:1px solid var(--border);
+      background:white;
+      color:var(--text);
+      padding:10px 18px;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:500;
+      font-size:14px;
+      transition:all .2s;
+    }
+    .btn:hover{
+      background:var(--bg);
+      border-color:var(--primary);
+    }
+    .btn:active{transform:translateY(0)}
+    .btn.primary{
+      background:var(--primary);
+      border-color:var(--primary);
+      color:white;
+    }
+    .btn.primary:hover{
+      background:var(--primary-dark);
+      border-color:var(--primary-dark);
+    }
+    .btn.small{padding:6px 12px;font-size:13px}
+
+    select{
+      width:100%;
+      padding:10px;
+      border:1px solid var(--border);
+      border-radius:6px;
+      background:white;
+      font-size:14px;
+      cursor:pointer;
+      margin-bottom:16px;
+    }
+
+    .flashcard-wrapper{
+      perspective:1000px;
+      min-height:280px;
+      margin:24px auto;
+      max-width:540px;
+    }
+    .flashcard{
+      position:relative;
+      width:100%;
+      height:280px;
+      transition:transform .6s;
+      transform-style:preserve-3d;
+      cursor:pointer;
+    }
+    .flashcard.flipped{transform:rotateY(180deg)}
+    .flashcard-face{
+      position:absolute;
+      width:100%;
+      height:100%;
+      backface-visibility:hidden;
+      border-radius:8px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:40px;
+      border:1px solid var(--border);
+      background:white;
+    }
+    .flashcard-front{background:#fafafa}
+    .flashcard-back{transform:rotateY(180deg)}
+    .flashcard-text{
+      font-size:34px;
+      font-weight:600;
+      text-align:center;
+      color:var(--text);
+    }
+    .flashcard-sub{
+      margin-top:12px;
+      font-size:14px;
+      color:var(--muted);
+      text-align:center;
+    }
+    .tag{
+      display:inline-block;
+      font-size:11px;
+      padding:4px 10px;
+      border:1px solid var(--primary);
+      border-radius:999px;
+      color:var(--primary);
+      background:rgba(91,134,229,0.1);
+      margin-top:14px;
+      font-weight:500;
+    }
+    .flashcard-hint{
+      position:absolute;
+      bottom:16px;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .card-counter{
+      text-align:center;
+      color:var(--muted);
+      font-size:14px;
+      margin-bottom:16px;
+    }
+    .controls{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin-top:20px;
+      flex-wrap:wrap;
+    }
+
+    .hint{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:12px;
+    }
+    .dropzone{
+      min-height:60px;
+      padding:12px;
+      border:2px dashed var(--border);
+      border-radius:6px;
+      background:white;
+    }
+    .chips{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .chip{
+      padding:8px 16px;
+      border-radius:20px;
+      border:1px solid var(--border);
+      background:white;
+      cursor:pointer;
+      font-weight:500;
+      transition:all .2s;
+    }
+    .chip:hover{
+      background:var(--primary);
+      color:white;
+      border-color:var(--primary);
+    }
+    .chip.disabled{
+      opacity:0.3;
+      cursor:not-allowed;
+    }
+    .chip.disabled:hover{
+      background:white;
+      color:var(--text);
+      border-color:var(--border);
+    }
+    .actions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .feedback{
+      padding:12px;
+      border-radius:6px;
+      font-weight:600;
+    }
+    .feedback.ok{
+      background:#e8f5e9;
+      color:#2e7d32;
+      border:1px solid #4caf50;
+    }
+    .feedback.bad{
+      background:#ffebee;
+      color:#c62828;
+      border:1px solid #f44336;
+    }
+    .feedback.neutral{
+      background:#e3f2fd;
+      color:#1565c0;
+      border:1px solid var(--primary);
+    }
+    .feedback .muted{
+      color:var(--muted);
+      font-weight:400;
+    }
+
+    .table-container{
+      overflow-x:auto;
+      border-radius:6px;
+      border:1px solid var(--border);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      background:white;
+    }
+    th{
+      background:var(--bg);
+      padding:12px;
+      text-align:left;
+      font-weight:700;
+      font-size:13px;
+      color:var(--text);
+      border-bottom:2px solid var(--border);
+    }
+    td{
+      padding:12px;
+      border-bottom:1px solid var(--border);
+      font-size:14px;
+    }
+    tr:last-child td{border-bottom:none}
+    .category-header{
+      background:var(--bg);
+      font-weight:700;
+      color:var(--text);
+      padding:10px 12px;
+    }
+
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    details[open] summary span:last-child {
+      content: "−";
+      transform: rotate(45deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Spanish Practice</h1>
+      <div class="subtitle">Body parts & clothing vocabulary</div>
+    </header>
+
+    <div class="tabs" id="tabs"></div>
+    <div class="card" id="view"></div>
+
+    <!-- Stats Ribbon at Bottom -->
+    <div class="stats-ribbon">
+      <div class="stat-item">
+        <span class="stat-label">Cards</span>
+        <span class="stat-number" id="statCardsStudied">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Correct</span>
+        <span class="stat-number" id="statCorrect">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Accuracy</span>
+        <span class="stat-number" id="statAccuracy">0%</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Progress</span>
+        <span class="stat-number" id="statProgress">0%</span>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const $ = (s) => document.querySelector(s);
+  const $$ = (s) => document.querySelectorAll(s);
+
+  const state = {
+    mode: "flashcards",
+    total: 0,
+    correct: 0,
+    cardsStudied: 0,
+    phrasesCompleted: new Set(),
+    sessionStartTime: Date.now()
+  };
+
+  // DATA: Body Parts & Clothing
+  const bodyParts = [
+    { en: "She has long hair", es: "Ella tiene cabello largo", note: "Body - tener" },
+    { en: "He has blue eyes", es: "Él tiene ojos azules", note: "Body - tener" },
+    { en: "They have strong legs", es: "Ellos tienen piernas fuertes", note: "Body - tener" },
+    { en: "She has short hair", es: "Ella tiene cabello corto", note: "Body - tener" },
+    { en: "He has strong arms", es: "Él tiene brazos fuertes", note: "Body - tener" },
+    { en: "They have big hands", es: "Ellos tienen manos grandes", note: "Body - tener" },
+    { en: "She has a small nose", es: "Ella tiene una nariz pequeña", note: "Body - tener" },
+    { en: "He has a big mouth", es: "Él tiene una boca grande", note: "Body - tener" },
+    { en: "They have clean hands", es: "Ellos tienen manos limpias", note: "Body - tener" },
+    { en: "She has a clean face", es: "Ella tiene una cara limpia", note: "Body - tener" },
+    { en: "He has a long neck", es: "Él tiene un cuello largo", note: "Body - tener" },
+    { en: "They have short arms", es: "Ellos tienen brazos cortos", note: "Body - tener" },
+    { en: "She has a round face", es: "Ella tiene una cara redonda", note: "Body - tener" },
+    { en: "He has strong shoulders", es: "Él tiene hombros fuertes", note: "Body - tener" },
+    { en: "They have tired eyes", es: "Ellos tienen ojos cansados", note: "Body - tener" },
+    { en: "She has small ears", es: "Ella tiene orejas pequeñas", note: "Body - tener" },
+    { en: "He has big feet", es: "Él tiene pies grandes", note: "Body - tener" },
+    { en: "They have long fingers", es: "Ellos tienen dedos de las manos largos", note: "Body - tener" },
+    { en: "I have green eyes", es: "Yo tengo ojos verdes", note: "Body - tener" },
+    { en: "I have short hair", es: "Yo tengo cabello corto", note: "Body - tener" }
+  ];
+
+  const clothingThis = [
+    { en: "This is a red shirt", es: "Esta es una camisa roja", note: "Clothing - ser" },
+    { en: "This is a blue jacket", es: "Esta es una chaqueta azul", note: "Clothing - ser" },
+    { en: "This is a black coat", es: "Este es un abrigo negro", note: "Clothing - ser" },
+    { en: "This is a white T-shirt", es: "Esta es una camiseta blanca", note: "Clothing - ser" },
+    { en: "These are new shoes", es: "Estos son zapatos nuevos", note: "Clothing - ser" },
+    { en: "These are clean socks", es: "Estos son calcetines limpios", note: "Clothing - ser" },
+    { en: "This sweater is comfortable", es: "Este suéter es cómodo", note: "Clothing - ser" },
+    { en: "This coat is elegant", es: "Este abrigo es elegante", note: "Clothing - ser" },
+    { en: "This dress is short", es: "Este vestido es corto", note: "Clothing - ser" },
+    { en: "Those pants are expensive", es: "Esos pantalones son caros", note: "Clothing - ser" }
+  ];
+
+  const clothingWearing = [
+    { en: "She has a green dress", es: "Ella tiene un vestido verde", note: "Clothing - tener" },
+    { en: "He has a blue jacket", es: "Él tiene una chaqueta azul", note: "Clothing - tener" },
+    { en: "They have black shoes", es: "Ellos tienen zapatos negros", note: "Clothing - tener" },
+    { en: "She has a long skirt", es: "Ella tiene una falda larga", note: "Clothing - tener" },
+    { en: "He has a white shirt", es: "Él tiene una camisa blanca", note: "Clothing - tener" },
+    { en: "They have new jeans", es: "Ellos tienen jeans nuevos", note: "Clothing - tener" },
+    { en: "She has clean socks", es: "Ella tiene calcetines limpios", note: "Clothing - tener" },
+    { en: "He has a black belt", es: "Él tiene un cinturón negro", note: "Clothing - tener" },
+    { en: "I have a red coat", es: "Yo tengo un abrigo rojo", note: "Clothing - tener" },
+    { en: "I have new shoes", es: "Yo tengo zapatos nuevos", note: "Clothing - tener" }
+  ];
+
+  const allPhrases = [...bodyParts, ...clothingThis, ...clothingWearing];
+
+  // Vocabulary Database
+  const vocabulary = {
+    bodyParts: [
+      // Face parts (Partes de la cara)
+      { es: "la cabeza", en: "head" },
+      { es: "el cabello", en: "hair" },
+      { es: "la frente", en: "forehead" },
+      { es: "las cejas", en: "eyebrows" },
+      { es: "los ojos", en: "eyes" },
+      { es: "las pestañas", en: "eyelashes" },
+      { es: "los párpados", en: "eyelids" },
+      { es: "las mejillas", en: "cheeks" },
+      { es: "la nariz", en: "nose" },
+      { es: "la boca", en: "mouth" },
+      { es: "los labios", en: "lips" },
+      { es: "los dientes", en: "teeth" },
+      { es: "la lengua", en: "tongue" },
+      { es: "la barbilla", en: "chin" },
+      { es: "las orejas", en: "ears" },
+      { es: "la cara", en: "face" },
+      { es: "la mandíbula", en: "jaw" },
+      
+      // Body parts (Partes del cuerpo)
+      { es: "el cuello", en: "neck" },
+      { es: "la garganta", en: "throat" },
+      { es: "los hombros", en: "shoulders" },
+      { es: "el pecho", en: "chest" },
+      { es: "la espalda", en: "back" },
+      { es: "el estómago", en: "stomach" },
+      { es: "la cintura", en: "waist" },
+      { es: "las caderas", en: "hips" },
+      { es: "los brazos", en: "arms" },
+      { es: "el codo", en: "elbow" },
+      { es: "el antebrazo", en: "forearm" },
+      { es: "la muñeca", en: "wrist" },
+      { es: "las manos", en: "hands" },
+      { es: "la palma", en: "palm" },
+      { es: "los dedos de las manos", en: "fingers" },
+      { es: "las uñas", en: "nails" },
+      { es: "el pulgar", en: "thumb" },
+      { es: "las piernas", en: "legs" },
+      { es: "el muslo", en: "thigh" },
+      { es: "la rodilla", en: "knee" },
+      { es: "la pantorrilla", en: "calf" },
+      { es: "el tobillo", en: "ankle" },
+      { es: "los pies", en: "feet" },
+      { es: "el talón", en: "heel" },
+      { es: "los dedos de los pies", en: "toes" }
+    ],
+    clothingItems: [
+      { es: "la camisa", en: "shirt" },
+      { es: "la camiseta", en: "T-shirt" },
+      { es: "la chaqueta", en: "jacket" },
+      { es: "el abrigo", en: "coat" },
+      { es: "el vestido", en: "dress" },
+      { es: "la falda", en: "skirt" },
+      { es: "los pantalones", en: "pants" },
+      { es: "los jeans", en: "jeans" },
+      { es: "los zapatos", en: "shoes" },
+      { es: "los calcetines", en: "socks" },
+      { es: "el cinturón", en: "belt" }
+    ],
+    adjectives: [
+      { es: "largo/a", en: "long" },
+      { es: "corto/a", en: "short" },
+      { es: "grande", en: "big" },
+      { es: "pequeño/a", en: "small" },
+      { es: "nuevo/a", en: "new" },
+      { es: "limpio/a", en: "clean" },
+      { es: "fuerte", en: "strong" }
+    ]
+  };
+
+  // STATS
+  const updateStats = () => {
+    $("#statCardsStudied").textContent = state.cardsStudied;
+    $("#statCorrect").textContent = state.correct;
+    
+    const accuracy = state.total > 0 
+      ? Math.round((state.correct / state.total) * 100) 
+      : 0;
+    $("#statAccuracy").textContent = accuracy + "%";
+    
+    // Calculate progress: how many unique phrases have been completed successfully
+    const totalPhrases = allPhrases.length;
+    const progress = Math.round((state.phrasesCompleted.size / totalPhrases) * 100);
+    $("#statProgress").textContent = progress + "%";
+  };
+
+  // TABS
+  const modes = [
+    { id: "flashcards", label: "📇 Flashcards", icon: "📇" },
+    { id: "form", label: "🔧 Form Phrases", icon: "🔧" },
+    { id: "vocabulary", label: "📚 Vocabulary", icon: "📚" }
+  ];
+
+  const renderTabs = () => {
+    $("#tabs").innerHTML = modes.map(m => 
+      `<div class="tab ${m.id === state.mode ? "active" : ""}" onclick="setMode('${m.id}')">${m.label}</div>`
+    ).join("");
+  };
+
+  window.setMode = (mode) => {
+    state.mode = mode;
+    renderTabs();
+    
+    if (mode === "flashcards") {
+      flashcardState.items = getAllVocabItems();
+      flashcardState.idx = 0;
+      flashcardState.flipped = false;
+      flashcardState.category = "All";
+      renderFlashcard();
+    } else if (mode === "form") {
+      scrambleState.target = null;
+      renderScramble();
+    } else if (mode === "vocabulary") {
+      renderVocabulary();
+    }
+  };
+
+  // FLASHCARDS
+  const getAllVocabItems = () => {
+    const items = [];
+    
+    vocabulary.bodyParts.forEach(item => {
+      items.push({ en: item.en, es: item.es, note: "Body Parts" });
+    });
+    
+    vocabulary.clothingItems.forEach(item => {
+      items.push({ en: item.en, es: item.es, note: "Clothing" });
+    });
+    
+    vocabulary.adjectives.forEach(item => {
+      items.push({ en: item.en, es: item.es, note: "Adjectives" });
+    });
+    
+    return items;
+  };
+
+  const flashcardState = {
+    items: getAllVocabItems(),
+    idx: 0,
+    flipped: false,
+    category: "All"
+  };
+
+  const shuffle = (arr) => {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+
+  window.playAudio = (text) => {
+    // Cancel any ongoing speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'es-MX'; // Latin American Spanish (neutral accent)
+    utterance.rate = 0.8; // Slightly slower for learning
+    utterance.pitch = 1;
+    utterance.volume = 1;
+    
+    window.speechSynthesis.speak(utterance);
+  };
+
+  window.flipCard = () => {
+    flashcardState.flipped = !flashcardState.flipped;
+    renderFlashcard(false);
+  };
+
+  window.nextCard = () => {
+    flashcardState.idx = (flashcardState.idx + 1) % flashcardState.items.length;
+    flashcardState.flipped = false;
+    state.cardsStudied += 1;
+    updateStats();
+    renderFlashcard();
+  };
+
+  window.prevCard = () => {
+    flashcardState.idx = (flashcardState.idx - 1 + flashcardState.items.length) % flashcardState.items.length;
+    flashcardState.flipped = false;
+    renderFlashcard();
+  };
+
+  window.shuffleCards = () => {
+    flashcardState.items = shuffle(flashcardState.items);
+    flashcardState.idx = 0;
+    flashcardState.flipped = false;
+    renderFlashcard();
+  };
+
+  window.changeFlashcardCategory = (cat) => {
+    flashcardState.category = cat;
+    
+    if (cat === "All") {
+      flashcardState.items = getAllVocabItems();
+    } else if (cat === "Body Parts") {
+      flashcardState.items = vocabulary.bodyParts.map(item => ({ ...item, note: "Body Parts" }));
+    } else if (cat === "Clothing") {
+      flashcardState.items = vocabulary.clothingItems.map(item => ({ ...item, note: "Clothing" }));
+    } else if (cat === "Adjectives") {
+      flashcardState.items = vocabulary.adjectives.map(item => ({ ...item, note: "Adjectives" }));
+    }
+    
+    flashcardState.idx = 0;
+    flashcardState.flipped = false;
+    renderFlashcard();
+  };
+
+  const renderFlashcard = (full = true) => {
+    const item = flashcardState.items[flashcardState.idx];
+    
+    if (full) {
+      $("#view").innerHTML = `
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">Vocabulary Flashcards</h3>
+        
+        <div style="margin-bottom:16px">
+          <select onchange="changeFlashcardCategory(this.value)" style="max-width:300px">
+            <option value="All" ${flashcardState.category === "All" ? "selected" : ""}>All Categories</option>
+            <option value="Body Parts" ${flashcardState.category === "Body Parts" ? "selected" : ""}>🧠 Body Parts</option>
+            <option value="Clothing" ${flashcardState.category === "Clothing" ? "selected" : ""}>👕 Clothing</option>
+            <option value="Adjectives" ${flashcardState.category === "Adjectives" ? "selected" : ""}>✨ Adjectives</option>
+          </select>
+        </div>
+
+        <div class="card-counter">${flashcardState.idx + 1} / ${flashcardState.items.length}</div>
+        <div class="flashcard-wrapper">
+          <div class="flashcard ${flashcardState.flipped ? "flipped" : ""}" id="flashcard" onclick="flipCard()">
+            <div class="flashcard-face flashcard-front">
+              <button class="audio-btn" onclick="event.stopPropagation(); playAudio('${item.es.replace(/'/g, "\\'")}');" style="position:absolute;top:16px;right:16px;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:white;cursor:pointer;font-size:18px;transition:all .2s;" onmouseover="this.style.borderColor='var(--text)'" onmouseout="this.style.borderColor='var(--border)'">🔊</button>
+              <div class="flashcard-text">${item.es}</div>
+              <div class="tag">${item.note}</div>
+              <div class="flashcard-hint">Click to flip</div>
+            </div>
+            <div class="flashcard-face flashcard-back">
+              <div class="flashcard-text">${item.en}</div>
+              <div class="flashcard-sub">${item.es}</div>
+              <div class="tag">${item.note}</div>
+            </div>
+          </div>
+        </div>
+        <div class="controls">
+          <button class="btn" onclick="prevCard()">← Previous</button>
+          <button class="btn" onclick="playAudio('${item.es.replace(/'/g, "\\'")}')">🔊 Play Audio</button>
+          <button class="btn" onclick="shuffleCards()">🔀 Shuffle</button>
+          <button class="btn primary" onclick="nextCard()">Next →</button>
+        </div>
+      `;
+    } else {
+      const fc = $("#flashcard");
+      if (flashcardState.flipped) fc.classList.add("flipped");
+      else fc.classList.remove("flipped");
+    }
+  };
+
+  // FORM PHRASES (Scramble)
+  const normalize = (s) => (s || "")
+    .toLowerCase()
+    .replace(/[¡!¿\?.,]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  const scrambleState = {
+    target: null,
+    clue: "",
+    words: [],
+    chosen: []
+  };
+
+  const newScramble = () => {
+    const picked = allPhrases[Math.floor(Math.random() * allPhrases.length)];
+    scrambleState.target = picked.es;
+    scrambleState.clue = picked.en + (picked.note ? ` (${picked.note})` : "");
+    scrambleState.words = shuffle(picked.es.split(" "));
+    scrambleState.chosen = [];
+    renderScramble();
+  };
+
+  const pickWord = (i) => {
+    if (scrambleState.chosen.includes(i)) return;
+    scrambleState.chosen.push(i);
+    renderScramble(false);
+  };
+
+  const unpickWord = (slotIndex) => {
+    scrambleState.chosen.splice(slotIndex, 1);
+    renderScramble(false);
+  };
+
+  const builtPhrase = () => scrambleState.chosen.map(i => scrambleState.words[i]).join(" ");
+
+  const checkScramble = () => {
+    const guess = builtPhrase();
+    state.total += 1;
+    const ok = normalize(guess) === normalize(scrambleState.target);
+
+    if (ok) {
+      state.correct += 1;
+      // Add this phrase to completed phrases set
+      state.phrasesCompleted.add(scrambleState.target);
+      $("#scrambleFeedback").innerHTML = `<div class="feedback ok">✅ Correct! <span class="muted">${scrambleState.target}</span></div>`;
+    } else {
+      $("#scrambleFeedback").innerHTML = `<div class="feedback bad">❌ Not quite. <span class="muted">Try again or reveal.</span></div>`;
+    }
+    updateStats();
+  };
+
+  const revealScramble = () => {
+    $("#scrambleFeedback").innerHTML = `<div class="feedback neutral">👀 Answer: <strong>${scrambleState.target}</strong></div>`;
+  };
+
+  const renderScramble = (full = true) => {
+    if (!scrambleState.target) newScramble();
+
+    const chosenWords = scrambleState.chosen.map((idx, slot) =>
+      `<span class="chip" onclick="unpickWord(${slot})">${scrambleState.words[idx]}</span>`
+    ).join("");
+
+    const availableWords = scrambleState.words.map((w, i) => {
+      const used = scrambleState.chosen.includes(i);
+      return `<span class="chip ${used ? "disabled" : ""}" onclick="${used ? "" : `pickWord(${i})`}">${w}</span>`;
+    }).join("");
+
+    if (full) {
+      $("#view").innerHTML = `
+        <h3 style="font-size:18px;font-weight:800;margin:14px 0 6px">Form the Phrase</h3>
+        <div class="hint">Read the English phrase, then click the Spanish words to put them in the correct order.</div>
+
+        <div style="margin-top:12px">
+          <div style="font-weight:700">English clue:</div>
+          <div style="margin-top:6px;font-size:16px">${scrambleState.clue}</div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div style="font-weight:700">Your phrase:</div>
+          <div class="dropzone chips" id="chosenZone">
+            ${chosenWords || `<span class="hint">Click words below to build the phrase…</span>`}
+          </div>
+        </div>
+
+        <div style="margin-top:14px">
+          <div style="font-weight:700">Available words:</div>
+          <div class="chips" id="wordsZone">${availableWords}</div>
+        </div>
+
+        <div class="actions" style="margin-top:16px">
+          <button class="btn" onclick="newScramble()">Next 🔁</button>
+          <button class="btn primary" onclick="checkScramble()">Check ✅</button>
+          <button class="btn" onclick="revealScramble()">Reveal 👀</button>
+        </div>
+
+        <div id="scrambleFeedback" style="margin-top:14px"></div>
+      `;
+    } else {
+      $("#chosenZone").innerHTML = chosenWords || `<span class="hint">Click words below to build the phrase…</span>`;
+      $("#wordsZone").innerHTML = availableWords;
+    }
+  };
+
+  window.newScramble = newScramble;
+  window.pickWord = pickWord;
+  window.unpickWord = unpickWord;
+  window.checkScramble = checkScramble;
+  window.revealScramble = revealScramble;
+
+  // VOCABULARY DATABASE
+  const renderVocabulary = () => {
+    let html = `
+      <h3 style="font-size:18px;font-weight:700;margin-bottom:16px">Vocabulary Database</h3>
+
+      <div style="margin-bottom:16px">
+        <details style="border:1px solid var(--border);border-radius:8px;padding:16px;background:white;cursor:pointer">
+          <summary style="font-size:15px;font-weight:700;color:var(--text);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+            <span>🧠 Body Parts (Partes del Cuerpo)</span>
+            <span style="font-size:20px;color:var(--primary)">+</span>
+          </summary>
+          <div style="margin-top:16px">
+            <div class="table-container">
+              <table>
+                <thead><tr><th>Spanish</th><th>English</th></tr></thead>
+                <tbody>
+    `;
+
+    vocabulary.bodyParts.forEach(item => {
+      html += `<tr><td><strong>${item.es}</strong></td><td>${item.en}</td></tr>`;
+    });
+
+    html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <details style="border:1px solid var(--border);border-radius:8px;padding:16px;background:white;cursor:pointer">
+          <summary style="font-size:15px;font-weight:700;color:var(--text);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+            <span>👕 Clothing Items (Ropa)</span>
+            <span style="font-size:20px;color:var(--primary)">+</span>
+          </summary>
+          <div style="margin-top:16px">
+            <div class="table-container">
+              <table>
+                <thead><tr><th>Spanish</th><th>English</th></tr></thead>
+                <tbody>
+    `;
+
+    vocabulary.clothingItems.forEach(item => {
+      html += `<tr><td><strong>${item.es}</strong></td><td>${item.en}</td></tr>`;
+    });
+
+    html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <details style="border:1px solid var(--border);border-radius:8px;padding:16px;background:white;cursor:pointer">
+          <summary style="font-size:15px;font-weight:700;color:var(--text);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+            <span>✨ Adjectives (Adjetivos)</span>
+            <span style="font-size:20px;color:var(--primary)">+</span>
+          </summary>
+          <div style="margin-top:16px">
+            <div class="table-container">
+              <table>
+                <thead><tr><th>Spanish</th><th>English</th></tr></thead>
+                <tbody>
+    `;
+
+    vocabulary.adjectives.forEach(item => {
+      html += `<tr><td><strong>${item.es}</strong></td><td>${item.en}</td></tr>`;
+    });
+
+    html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <details style="border:1px solid var(--border);border-radius:8px;padding:16px;background:white;cursor:pointer">
+          <summary style="font-size:15px;font-weight:700;color:var(--text);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+            <span>📝 Complete Phrases</span>
+            <span style="font-size:20px;color:var(--primary)">+</span>
+          </summary>
+          <div style="margin-top:16px">
+            <div class="table-container">
+              <table>
+                <thead><tr><th>English</th><th>Spanish</th><th>Category</th></tr></thead>
+                <tbody>
+    `;
+
+    allPhrases.forEach(item => {
+      html += `<tr><td>${item.en}</td><td><strong>${item.es}</strong></td><td>${item.note}</td></tr>`;
+    });
+
+    html += `
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div style="margin-bottom:16px">
+        <details style="border:1px solid var(--border);border-radius:8px;padding:16px;background:white;cursor:pointer">
+          <summary style="font-size:15px;font-weight:700;color:var(--text);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
+            <span>📖 Verb Conjugations</span>
+            <span style="font-size:20px;color:var(--primary)">+</span>
+          </summary>
+          <div style="margin-top:16px">
+            <div class="table-container">
+              <table>
+                <thead><tr><th>Subject</th><th>Tener (to have)</th><th>Ser (to be)</th><th>Estar (to be)</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Yo</strong> (I)</td><td>tengo</td><td>soy</td><td>estoy</td></tr>
+                  <tr><td><strong>Tú</strong> (You - informal)</td><td>tienes</td><td>eres</td><td>estás</td></tr>
+                  <tr><td><strong>Él/Ella</strong> (He/She)</td><td>tiene</td><td>es</td><td>está</td></tr>
+                  <tr><td><strong>Nosotros/Nosotras</strong> (We)</td><td>tenemos</td><td>somos</td><td>estamos</td></tr>
+                  <tr><td><strong>Vosotros/Vosotras</strong> (You all - informal)</td><td>tenéis</td><td>sois</td><td>estáis</td></tr>
+                  <tr><td><strong>Ellos/Ellas</strong> (They)</td><td>tienen</td><td>son</td><td>están</td></tr>
+                  <tr><td><strong>Usted</strong> (You - formal)</td><td>tiene</td><td>es</td><td>está</td></tr>
+                  <tr><td><strong>Ustedes</strong> (You all - formal)</td><td>tienen</td><td>son</td><td>están</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="margin-top:12px;padding:12px;background:#f8f9ff;border-left:3px solid var(--primary);border-radius:4px">
+              <p style="margin:0;font-size:13px;color:var(--muted);line-height:1.6">
+                <strong style="color:var(--text)">Note:</strong> Both <strong>ser</strong> and <strong>estar</strong> mean "to be" in English, but they're used differently. 
+                <strong>Ser</strong> is for permanent characteristics (identity, origin, time). 
+                <strong>Estar</strong> is for temporary states, locations, and conditions.
+              </p>
+            </div>
+          </div>
+        </details>
+      </div>
+    `;
+
+    $("#view").innerHTML = html;
+  };
+
+  // INIT
+  renderTabs();
+  setMode("flashcards");
+  updateStats();
+</script>
+</body>
+</html>
